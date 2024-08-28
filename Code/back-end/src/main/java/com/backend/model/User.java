@@ -6,16 +6,17 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.io.Serializable;
 import java.sql.Blob;
 import java.time.LocalDate;
+import java.util.List;
 
-@Table(name = "User")
+@Table(name = "user")
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)
 public class User implements Serializable {
-    @Column(name = "id")
+    @Column(name = "user_id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(name = "full_name", length = 255, nullable = false)
     private String fullName;
@@ -27,7 +28,7 @@ public class User implements Serializable {
     @Column(name = "password", length = 30, nullable = false)
     private String password;
 
-    @Column(name = "age", length = 5, nullable = false)
+    @Column(name = "age", nullable = false)
     private int age;
 
     @Column(name = "gender")
@@ -50,6 +51,12 @@ public class User implements Serializable {
     @Column(name = "avatar", columnDefinition = "LONGBLOB")
     private byte[] avatar;
 
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comment;
+
+    @OneToMany(mappedBy = "user")
+    private List<Booking> booking;
+
     @Column(name = "created_at", updatable = false)
     @CreationTimestamp
     private LocalDate createdAt;
@@ -71,8 +78,7 @@ public class User implements Serializable {
 
     public User() {}
 
-    public User(int id, String fullName, String email, String password, int age, Gender gender, String phoneNumber, String identity,
-                String address, Role role, byte[] avatar, LocalDate createdAt) {
+    public User(Long id, String fullName, String email, String password, int age, Gender gender, String phoneNumber, String identity, String address, Role role, byte[] avatar, List<Comment> comment, List<Booking> booking, LocalDate createdAt) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
@@ -84,14 +90,16 @@ public class User implements Serializable {
         this.address = address;
         this.role = role;
         this.avatar = avatar;
+        this.comment = comment;
+        this.booking = booking;
         this.createdAt = createdAt;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -173,6 +181,22 @@ public class User implements Serializable {
 
     public void setAvatar(byte[] avatar) {
         this.avatar = avatar;
+    }
+
+    public List<Comment> getComment() {
+        return comment;
+    }
+
+    public void setComment(List<Comment> comment) {
+        this.comment = comment;
+    }
+
+    public List<Booking> getBooking() {
+        return booking;
+    }
+
+    public void setBooking(List<Booking> booking) {
+        this.booking = booking;
     }
 
     public LocalDate getCreatedAt() {
