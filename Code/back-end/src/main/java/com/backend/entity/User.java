@@ -1,10 +1,9 @@
-package com.backend.model;
+package com.backend.entity;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
-import java.sql.Blob;
 import java.time.LocalDate;
 import java.util.List;
 
