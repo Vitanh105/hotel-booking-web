@@ -1,20 +1,20 @@
-package com.backend.model;
+package com.backend.entity;
 
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
-@Table(name = "room_image")
+@Table(name = "hotel_image")
 @Entity
-public class RoomImage {
+public class HotelImage {
+    @Column(name = "hotel_image_id")
     @Id
-    @Column(name = "room_image_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "room_id")
-    private Room room;
+    @JoinColumn(name = "hotel_id")
+    private Hotel hotel;
 
     @Column(name = "image_url", length = 500, nullable = false)
     private String imageUrl;
@@ -25,11 +25,11 @@ public class RoomImage {
     @Column(name = "updated_at", updatable = true)
     private LocalDate updatedAt;
 
-    public RoomImage() {}
+    public HotelImage() {}
 
-    public RoomImage(Long id, Room room, String imageUrl, LocalDate createdAt, LocalDate updatedAt) {
+    public HotelImage(Long id, Hotel hotel, String imageUrl, LocalDate createdAt, LocalDate updatedAt) {
         this.id = id;
-        this.room = room;
+        this.hotel = hotel;
         this.imageUrl = imageUrl;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -43,12 +43,12 @@ public class RoomImage {
         this.id = id;
     }
 
-    public Room getRoom() {
-        return room;
+    public Hotel getHotel() {
+        return hotel;
     }
 
-    public void setRoom(Room room) {
-        this.room = room;
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
     }
 
     public String getImageUrl() {
