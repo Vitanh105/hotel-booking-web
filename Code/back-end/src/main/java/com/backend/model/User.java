@@ -11,7 +11,7 @@ import java.util.List;
 @Table(name = "user")
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)
+//@DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)
 public class User implements Serializable {
     @Column(name = "user_id")
     @Id
@@ -22,10 +22,10 @@ public class User implements Serializable {
     private String fullName;
 
 
-    @Column(name = "email", length = 100, nullable = false)
+    @Column(name = "email", length = 100, nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password", length = 30, nullable = false)
+    @Column(name = "password", length = 255, nullable = false)
     private String password;
 
     @Column(name = "age", nullable = false)
@@ -44,11 +44,12 @@ public class User implements Serializable {
     @Column(name = "address", length = 255, nullable = false)
     private String address;
 
-    @Column(name = "role", insertable = false, updatable = false)
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Lob
-    @Column(name = "avatar", columnDefinition = "LONGBLOB")
+    @Column(name = "avatar", columnDefinition = "LONGBLOB", nullable = true)
     private byte[] avatar;
 
     @OneToMany(mappedBy = "user")
@@ -69,12 +70,12 @@ public class User implements Serializable {
         CUSTOMER, MANAGER, ADMIN
     }
 
-    @PrePersist
-    public void prePersist() {
-        if (role == null) {
-            role = Role.CUSTOMER;
-        }
-    }
+//    @PrePersist
+//    public void prePersist() {
+//        if (role == null) {
+//            role = Role.CUSTOMER;
+//        }
+//    }
 
     public User() {}
 
