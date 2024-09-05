@@ -3,7 +3,6 @@ package com.backend.controller;
 import com.backend.dto.HotelDto;
 import com.backend.form.HotelCreateForm;
 import com.backend.form.HotelFilterForm;
-import com.backend.service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 

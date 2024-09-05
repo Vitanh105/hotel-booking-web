@@ -2,7 +2,6 @@ package com.backend.controller;
 
 import com.backend.dto.HotelImageDto;
 import com.backend.form.HotelImageCreateForm;
-import com.backend.service.IHotelImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

@@ -2,7 +2,6 @@ package com.backend.controller;
 import com.backend.dto.HotelDetailDto;
 import com.backend.form.HotelDetailCreateForm;
 import com.backend.form.HotelDetailFilterForm;
-import com.backend.service.HotelDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
