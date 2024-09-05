@@ -1,5 +1,6 @@
 package com.backend.service;
 
+import com.backend.exception.ResourceNotFoundException;
 import com.backend.model.User;
 import com.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,5 +64,11 @@ public class UserService {
 
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    public void delete(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        userRepository.delete(user);
     }
 }
