@@ -2,8 +2,8 @@ package com.backend.service;
 
 import com.backend.dto.HotelDetailDto;
 
-import com.backend.entity.Hotel;
-import com.backend.entity.HotelDetail;
+import com.backend.model.Hotel;
+import com.backend.model.HotelDetail;
 import com.backend.form.HotelDetailCreateForm;
 import com.backend.form.HotelDetailFilterForm;
 import com.backend.repository.IHotelDetailRepository;

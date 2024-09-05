@@ -1,7 +1,7 @@
 package com.backend.repository;
 
-import com.backend.entity.Hotel;
-import com.backend.entity.HotelDetail;
+import com.backend.model.Hotel;
+import com.backend.model.HotelDetail;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

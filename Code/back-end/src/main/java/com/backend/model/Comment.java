@@ -1,23 +1,29 @@
-package com.backend.entity;
+package com.backend.model;
 
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
-@Table(name = "room_image")
 @Entity
-public class RoomImage {
+@Table(name = "comment", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"user_id", "room_id"})
+})
+public class Comment {
     @Id
-    @Column(name = "room_image_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "comment_id")
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @Column(name = "image_url", length = 500, nullable = false)
-    private String imageUrl;
+    @Column(name = "comment", nullable = false)
+    private String comment;
 
     @Column(name = "created_at", updatable = false)
     private LocalDate createdAt;
@@ -25,12 +31,13 @@ public class RoomImage {
     @Column(name = "updated_at", updatable = true)
     private LocalDate updatedAt;
 
-    public RoomImage() {}
+    public Comment() {}
 
-    public RoomImage(Long id, Room room, String imageUrl, LocalDate createdAt, LocalDate updatedAt) {
+    public Comment(Long id, User user, Room room, String comment, LocalDate createdAt, LocalDate updatedAt) {
         this.id = id;
+        this.user = user;
         this.room = room;
-        this.imageUrl = imageUrl;
+        this.comment = comment;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -43,6 +50,14 @@ public class RoomImage {
         this.id = id;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public Room getRoom() {
         return room;
     }
@@ -51,12 +66,12 @@ public class RoomImage {
         this.room = room;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getComment() {
+        return comment;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public LocalDate getCreatedAt() {

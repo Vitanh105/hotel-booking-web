@@ -1,7 +1,7 @@
 package com.backend.service;
 
 import com.backend.dto.HotelImageDto;
-import com.backend.entity.HotelImage;
+import com.backend.model.HotelImage;
 import com.backend.form.HotelImageCreateForm;
 import com.backend.repository.IHotelImageRepository;
 import org.modelmapper.ModelMapper;

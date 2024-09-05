@@ -1,6 +1,6 @@
 package com.backend.dto;
 
-import com.backend.entity.Hotel;
+import com.backend.model.Hotel;
 import lombok.Data;
 
 import java.time.LocalDate;
