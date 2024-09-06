@@ -1,7 +1,7 @@
 package com.backend.service;
 
 import com.backend.jwt.JWTUtility;
-import com.backend.model.User;
+import com.backend.entity.User;
 import com.backend.repository.UserRepository;
 import com.backend.security.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
