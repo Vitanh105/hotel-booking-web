@@ -1,7 +1,7 @@
 package com.backend.service;
 
 import com.backend.exception.ResourceNotFoundException;
-import com.backend.model.City;
+import com.backend.entity.City;
 import com.backend.repository.CityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

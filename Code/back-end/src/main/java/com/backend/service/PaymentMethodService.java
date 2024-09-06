@@ -1,7 +1,7 @@
 package com.backend.service;
 
 import com.backend.exception.ResourceNotFoundException;
-import com.backend.model.PaymentMethod;
+import com.backend.entity.PaymentMethod;
 import com.backend.repository.PaymentMethodRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

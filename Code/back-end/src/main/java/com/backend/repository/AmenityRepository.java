@@ -1,6 +1,6 @@
 package com.backend.repository;
 
-import com.backend.model.Amenity;
+import com.backend.entity.Amenity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

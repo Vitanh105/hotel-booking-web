@@ -1,7 +1,7 @@
 package com.backend.service;
 
 import com.backend.exception.ResourceNotFoundException;
-import com.backend.model.Amenity;
+import com.backend.entity.Amenity;
 import com.backend.repository.AmenityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
