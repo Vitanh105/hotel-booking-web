@@ -1,2 +1,8 @@
-package com.backend.dto;public class CityDto {
+package com.backend.dto;
+
+import lombok.Data;
+
+@Data
+public class CityDto {
+    private String cityName;
 }

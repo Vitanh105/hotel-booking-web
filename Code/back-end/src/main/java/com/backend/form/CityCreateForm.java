@@ -1,2 +1,8 @@
-package com.backend.form;public class CityCreateForm {
+package com.backend.form;
+
+import lombok.Data;
+
+@Data
+public class CityCreateForm {
+    private String cityName;
 }

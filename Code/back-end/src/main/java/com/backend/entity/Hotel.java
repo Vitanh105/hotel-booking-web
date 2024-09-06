@@ -1,6 +1,8 @@
 package com.backend.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -42,9 +44,11 @@ public class Hotel {
 //    private List<HotelDetail> detailId;
 
     @Column(name = "created_at", updatable = false)
+    @CreationTimestamp
     private LocalDate createdAt;
 
     @Column(name = "updated_at", updatable = true)
+    @UpdateTimestamp
     private LocalDate updatedAt;
 
     public enum Status {

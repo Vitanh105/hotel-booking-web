@@ -1,4 +1,8 @@
 package com.backend.dto;
 
-public class ComentDto {
+import lombok.Data;
+
+@Data
+public class CommentDto {
+    private String comment;
 }

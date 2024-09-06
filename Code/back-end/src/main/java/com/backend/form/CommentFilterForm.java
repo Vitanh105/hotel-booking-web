@@ -1,2 +1,8 @@
-package com.backend.form;public class CommentFilterForm {
+package com.backend.form;
+
+import lombok.Data;
+
+@Data
+public class CommentFilterForm {
+    private String Search;
 }

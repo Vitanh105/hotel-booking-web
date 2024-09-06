@@ -3,6 +3,6 @@ package com.backend.form;
 import lombok.Data;
 
 @Data
-public class CityFilterForm {
+public class AmenityFilterForm {
     private  String search;
 }
