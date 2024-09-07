@@ -35,7 +35,8 @@ public class RoomService  implements  IRoomService{
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         Page<Room> roomPage =repository.findAll(spec,pageable);
         return roomPage.map(room -> modelMapper.map(room, RoomDto.class));
-    }
+
+}
 
     @Override
     public RoomDto create(RoomCreateForm form) {
