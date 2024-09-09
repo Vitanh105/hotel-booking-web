@@ -1,22 +1,24 @@
-import "./App.css";
-import HomePage from "./Page/HomePage";
-import { Container } from "reactstrap";
-// import Login from "./Page/Login";
-// import Signin from "./Page/Signin";
-// import ForgetPassword from "./Page/ForgetPassword";
-// import CheckMail from "./Page/CheckMail";
-// import ChangePassword from "./Page/ChangePassword";
+import logo from './logo.svg';
+import './App.css';
 
 function App() {
   return (
-    <Container>
-      <HomePage />
-      {/* <Login/> */}
-      {/* <Signin/> */}
-      {/* <ForgetPassword/> */}
-      {/* <CheckMail/> */}
-      {/* <ChangePassword/> */}
-    </Container>
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
   );
 }
 
