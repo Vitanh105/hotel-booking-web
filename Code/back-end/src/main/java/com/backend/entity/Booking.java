@@ -44,7 +44,7 @@ public class Booking {
     private LocalDate createdAt;
 
     @Column(name = "updated_at", nullable = false, updatable = true)
-   @UpdateTimestamp
+    @UpdateTimestamp
     private LocalDate updatedAt;
 
     public Booking() {}

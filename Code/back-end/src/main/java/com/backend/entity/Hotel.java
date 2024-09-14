@@ -40,8 +40,6 @@ public class Hotel {
 
     @OneToMany(mappedBy = "hotel")
     private List<Booking> booking;
-//    @OneToMany(mappedBy = "hotel")
-//    private List<HotelDetail> detailId;
 
     @Column(name = "created_at", updatable = false)
     @CreationTimestamp

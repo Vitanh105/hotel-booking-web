@@ -11,7 +11,6 @@ public class BackEndApplication {
     public static void main(String[] args) {
         SpringApplication.run(BackEndApplication.class, args);
     }
-
     @Bean
     public ModelMapper modelMapper(){
         return new ModelMapper();
