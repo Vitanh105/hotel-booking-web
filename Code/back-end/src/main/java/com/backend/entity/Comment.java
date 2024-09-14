@@ -1,6 +1,8 @@
 package com.backend.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 
@@ -26,9 +28,11 @@ public class Comment {
     private String comment;
 
     @Column(name = "created_at", updatable = false)
+    @CreationTimestamp
     private LocalDate createdAt;
 
     @Column(name = "updated_at", updatable = true)
+    @UpdateTimestamp
     private LocalDate updatedAt;
 
     public Comment() {}

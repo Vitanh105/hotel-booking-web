@@ -1,6 +1,8 @@
 package com.backend.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 
@@ -38,9 +40,11 @@ public class Booking {
     private float totalAmount;
 
     @Column(name = "created_at", nullable = false)
+    @CreationTimestamp
     private LocalDate createdAt;
 
     @Column(name = "updated_at", nullable = false, updatable = true)
+    @UpdateTimestamp
     private LocalDate updatedAt;
 
     public Booking() {}

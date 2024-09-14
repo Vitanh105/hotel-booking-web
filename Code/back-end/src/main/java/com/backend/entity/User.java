@@ -69,12 +69,12 @@ public class User implements Serializable {
         CUSTOMER, MANAGER, ADMIN
     }
 
-//    @PrePersist
-//    public void prePersist() {
-//        if (role == null) {
-//            role = Role.CUSTOMER;
-//        }
-//    }
+    @PrePersist
+    public void prePersist() {
+        if (role == null) {
+            role = Role.CUSTOMER;
+        }
+    }
 
     public User() {}
 
