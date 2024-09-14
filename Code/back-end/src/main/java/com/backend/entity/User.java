@@ -10,7 +10,6 @@ import java.util.List;
 @Table(name = "user")
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-//@DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)
 public class User implements Serializable {
     @Column(name = "user_id")
     @Id
@@ -19,7 +18,6 @@ public class User implements Serializable {
 
     @Column(name = "full_name", length = 255, nullable = false)
     private String fullName;
-
 
     @Column(name = "email", length = 100, nullable = false, unique = true)
     private String email;
@@ -49,6 +47,7 @@ public class User implements Serializable {
 
     @Lob
     @Column(name = "avatar", columnDefinition = "LONGBLOB", nullable = true)
+
     private byte[] avatar;
 
     @OneToMany(mappedBy = "user")
