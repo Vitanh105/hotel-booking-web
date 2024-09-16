@@ -1,0 +1,57 @@
+
+.container {
+    display: flex;
+    justify-content: center; /* Canh giữa theo chiều ngang */
+    align-items: center;    /* Canh giữa theo chiều dọc */
+    height: 70vh;  /* Chiều cao toàn màn hình */
+    margin: 100px; 
+        
+}
+
+.signin-container {
+    margin-top: 5px;
+    padding:40px;
+    border: 2px solid black;
+    background-color: #f9f9f9;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+.signin-header {
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.error-message{
+    color: red;
+}
+
+.signin-container .form-control {
+    margin-bottom:0px;
+}
+
+.other-options {
+    display: flex;
+    margin-top: 10px;
+   margin: 90px;
+}
+
+.other-options button {
+    width: 40px;
+    height: 40px;
+}
+.signin-footer {
+    text-align: center;
+    margin-top: 15px;
+}
+
+
+.separator {
+    text-align: center;
+} 
+
+.Close{
+    padding: 5px;
+  margin-left:400px;
+  
+}

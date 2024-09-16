@@ -1,0 +1,21 @@
+
+  .footer{
+    min-height: 100vh;  /* Đảm bảo trang luôn chiếm 100% chiều cao cửa sổ */
+    display: flex;
+    flex-direction: column;
+  }
+   
+  .social-icons {
+    margin-top: 10px;
+  }
+  .social-icons i {
+    font-size: 18px;
+    margin: 0 10px;
+    color: #666;
+  }
+ 
+  .divider {
+    padding-left: 10px;
+  }
+
+ 
