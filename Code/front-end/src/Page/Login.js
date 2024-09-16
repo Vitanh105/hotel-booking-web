@@ -1,12 +1,12 @@
 import React from "react";
 import "./Login.css";
-
+import { Link, NavLink } from "react-router-dom";
 function Login(props) {
   return (
     <div class="container">
       <div class="login-container">
         <div class="login-header">
-        <h1>
+          <h1>
             <b>Đăng Nhập</b>
           </h1>
         </div>
@@ -37,29 +37,26 @@ function Login(props) {
               </span>
             </div>
           </div>
-
           <div class="form-group">
             <div class="checkbox remember-me">
               <label>
-                <input type="checkbox" /> Duy trì đăng nhập
+                <input type="checkbox" /> Duy trì đăng nhập{" "}
+                <NavLink to={"/forgetpassword"} style={{ color: "blue" }}>
+                  Quên mật khẩu?
+                </NavLink>
               </label>
             </div>
-            <a href="#" class="forgot-password">
-              Quên mật khẩu?
-            </a>
           </div>
-
           <button type="submit" class="btn btn-primary btn-block">
             Đăng nhập
           </button>
         </form>
-
         <div class="login-footer">
           <p>
             Bạn chưa có tài khoản?{" "}
-            <a href="#" class="login-link">
+            <NavLink to={"/signup"} style={{ color: "blue" }}>
               Đăng ký
-            </a>
+            </NavLink>
           </p>
         </div>
 
@@ -68,12 +65,22 @@ function Login(props) {
         </div>
 
         <div class="other-options">
-          <button class="btn btn-default">
-            <i class="fa-brands fa-facebook"></i>
-          </button>
-          <button class="btn btn-default">
-            <i class="fa-brands fa-google"></i>
-          </button>
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <NavLink to={"https://www.facebook.com/"}>
+                <button class="btn btn-default">
+                  <i class="fa-brands fa-facebook"></i>
+                </button>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to={"https://www.google.com.vn/"}>
+                <button class="btn btn-default">
+                  <i class="fa-brands fa-google"></i>
+                </button>
+              </NavLink>
+            </li>
+          </ul>
         </div>
       </div>
     </div>

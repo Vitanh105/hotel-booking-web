@@ -1,5 +1,5 @@
 import React from 'react';
-import HomeContainer from "../Container/HomeContainer";
+import HomeContainer from "../Containers/HomeContainer";
 
 
 function HomePage(props) {
