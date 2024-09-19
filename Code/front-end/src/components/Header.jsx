@@ -127,6 +127,66 @@ const Header = () => {
         )}
       </div>
 
+      {/* Popup */}
+      {isPopupOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
+          <div className="relative bg-white p-8 rounded-lg shadow-lg w-96">
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+              onClick={togglePopup}
+            >
+              <CloseIcon className="w-6 h-6" />
+            </button>
+
+            {/* Check if form is submitted */}
+            {isFormSubmitted ? (
+              <div className="text-center">
+                <h2 className="text-2xl font-bold mb-4">Đã gửi yêu cầu</h2>
+                <p className="mb-4">Cảm ơn bạn đã gửi yêu cầu hợp tác, chúng tôi sẽ phản hồi lại yêu cầu của bạn sớm nhất có thể.</p>
+                <button
+                  onClick={togglePopup}
+                  className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-yellow-300"
+                >
+                  Ok
+                </button>
+              </div>
+            ) : (
+              <div>
+                <h2 className="text-2xl font-bold mb-4">Đăng ký trở thành đối tác</h2>
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-4 flex flex-col items-start">
+                    <label htmlFor="hotelName" className="block text-sm font-medium text-gray-700">Tên khách sạn</label>
+                    <input
+                      id="hotelName"
+                      type="text"
+                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        placeholder="Nhập tên khách sạn"
+                        required
+                    />
+                  </div>
+                  <div className="mb-4 flex flex-col items-start">
+                    <label htmlFor="hotelAddress" className="block text-sm font-medium text-gray-700">Địa chỉ khách sạn</label>
+                    <input
+                      id="hotelAddress"
+                      type="text"
+                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        placeholder="Nhập địa chỉ khách sạn"
+                        required
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-yellow-300"
+                  >
+                    Gửi
+                  </button>
+                </form>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Login Popup */}
       {isLoginPopupOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
