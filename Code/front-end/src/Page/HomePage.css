@@ -1,0 +1,125 @@
+.featured-hotels {
+    padding: 2rem;
+    max-width: 1100px;
+    margin: 0px auto;
+  }
+ 
+  .hotel-list {
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  .city-list {
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 2rem;
+    scroll-behavior: smooth;
+  }
+  
+  .hotel-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    
+  }
+  .city-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    display: inline-block;
+    width: 100%; 
+    max-width: 300px; 
+    box-sizing: border-box; 
+}
+
+.city-card img {
+  width: 100%; 
+  min-height: 200px; 
+  object-fit: cover; 
+  border-radius: 8px 8px 0 0; 
+}
+   
+  
+  .hotel-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  @media (max-width: 768px) {
+    .hotel-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .hotel-list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .arrow-container {
+    display: flex;
+    align-items: center;
+  }
+
+
+/* Phần ưu đãi */
+
+.image-container {
+  display: flex;
+  position: relative;
+  text-align: center; /* Căn giữa nội dung */
+}
+
+.promotion-image {
+  display: inline-block; /* Để có thể căn chỉnh theo chiều ngang */
+  width: 49%; /* Hoặc kích thước mong muốn */
+  height: 245px; /* Đảm bảo tỷ lệ khung hình */
+  margin: 0 0.5%; /* Khoảng cách bên trái và bên phải */
+  border-radius: 15px;
+}
+
+.text-overlay {
+  position: absolute;
+  top: 50%; /* Đặt giữa theo chiều dọc */
+  left: 20%; /* Đặt giữa theo chiều ngang */
+  transform: translate(-50%, -50%); /* Căn giữa chính xác */
+  color: white; /* Màu chữ */
+  text-align: center; /* Căn giữa chữ */
+  padding: 20px;
+  border-radius: 10px; /* Làm tròn góc */
+}
+
+.text-overlay1 {
+  position: absolute;
+  top: 50%; /* Đặt giữa theo chiều dọc */
+  left: 66%; /* Đặt giữa theo chiều ngang */
+  transform: translate(-50%, -50%); /* Căn giữa chính xác */
+  color: white; /* Màu chữ */
+  text-align: center; /* Căn giữa chữ */
+  padding: 20px;
+  border-radius: 10px; /* Làm tròn góc */
+}
+
+.btn {
+  background-color: rgba(7, 65, 224, 0.8); /* Màu nền có độ trong suốt */
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  margin-top: 10px; /* Khoảng cách giữa nút và đoạn mô tả */
+}
+
+
+
+  
+  
+  

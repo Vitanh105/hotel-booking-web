@@ -1,0 +1,58 @@
+/* src/SearchBar.css */
+.search-bar {
+  max-width: 1000px;
+  margin-top: 200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 15px;
+  padding-bottom: 0px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.form-group {
+  text-align: center;
+  flex: 1 1 200px; /* Các trường có thể co giãn và tối thiểu rộng 200px */
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+  
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.875em;
+  margin-top: 5px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1em;
+  margin-top: 25px;
+  margin-bottom: 25px; /* Đảm bảo nút không bị đè lên các trường nhập */
+}
+
+button:hover {
+  background-color: #0056b3;
+}
