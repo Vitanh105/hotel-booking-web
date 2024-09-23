@@ -1,57 +1,184 @@
 package com.backend.controller;
 
-import com.backend.dto.BookingDto;
-
-import com.backend.form.BookingCreateForm;
-import com.backend.form.BookingFilterForm;
-
-import com.backend.service.BookingService;
+import com.backend.model.Booking;
+import com.backend.model.Customer;
+import com.backend.model.validate.BookingDTO;
+import com.backend.model.validate.BookingInitiationDTO;
+import com.backend.model.validate.HotelDTO;
+import com.backend.model.validate.PaymentCardDTO;
+import com.backend.service.*;
+import com.backend.util.JwtTokenUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
+import java.util.Map;
+
+
 @RestController
-@ResponseStatus
+@RequestMapping("/booking")
 public class BookingController {
-    private final BookingService service;
+    private HotelService hotelService;
+    private UserService userService;
+    private BookingService bookingService;
+    private JwtTokenUtil jwtTokenUtil;
+    private HttpServletRequest request;
+    private CustomerService customerService;
+    private VNPayService vnPayService;
 
     @Autowired
-    public BookingController(BookingService service) {
-        this.service = service;
+    public BookingController(HotelService hotelService,
+                            UserService userService,
+                            BookingService bookingService,
+                            JwtTokenUtil jwtTokenUtil,
+                            HttpServletRequest request,
+                            CustomerService customerService,
+                            VNPayService vnPayService){
+        this.hotelService= hotelService;
+        this.bookingService= bookingService;
+        this.userService= userService;
+        this.jwtTokenUtil=jwtTokenUtil;
+        this.request=request;
+        this.customerService=customerService;
+        this.vnPayService=vnPayService;
+        }
+    
+
+    // đặt phòng 
+    // nhập hotelId, checkinDate, checkoutDate,totalPrice,durationDays
+    
+    // lấy thông tin khách sạn bằng id
+    @GetMapping("/hotel/{hotelID}")
+    public ResponseEntity<HotelDTO> getHotelInfor(@PathVariable Long hotelID){
+        HotelDTO hotelDTO = hotelService.findHotelDtoById(hotelID);
+        if (hotelDTO == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // không tìm thấy khách sạn
+        }
+        return ResponseEntity.ok(hotelDTO);
+    }
+// thanh toan VNPay
+        @PostMapping("/submitOrder")
+    public Map<String, String> submitOrder(
+                                           @RequestParam("orderInfo") String orderInfo,
+                                           HttpSession session,
+                                           Booking booking,
+                                           HttpServletRequest request) {
+        BookingInitiationDTO bookingInitiationDTO = (BookingInitiationDTO) session.getAttribute("bookingInitiationDTO");
+        double orderTotal = bookingInitiationDTO.getAmount();
+        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+        String vnpayUrl = vnPayService.createOrder(orderTotal, orderInfo, baseUrl);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("redirectUrl", vnpayUrl);
+        return response;
     }
 
-    @GetMapping("api/v1/bookings")
-    public Page<BookingDto> findAll(
-            BookingFilterForm form,
-            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-            @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
-            @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir) {
-        Page<BookingDto> list = service.findAll(form, pageNo, pageSize, sortBy, sortDir);
-        return list;
+    @GetMapping("/vnpay-payment")
+    public Map<String, Object> getPaymentResult(HttpServletRequest request, HttpSession session, Booking booking) {
+        BookingInitiationDTO bookingInitiationDTO = (BookingInitiationDTO) session.getAttribute("bookingInitiationDTO");
+        int paymentStatus = vnPayService.orderReturn(request, bookingInitiationDTO, booking);
+        String orderInfo = request.getParameter("vnp_OrderInfo");
+        String paymentTime = request.getParameter("vnp_PayDate");
+        String transactionId = request.getParameter("vnp_TransactionNo");
+        String totalPrice = request.getParameter("vnp_Amount");
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("orderId", orderInfo);
+        response.put("totalPrice", totalPrice);
+        response.put("paymentTime", paymentTime);
+        response.put("transactionId", transactionId);
+        response.put("paymentStatus", paymentStatus == 1 ? "success" : "fail");
+
+        if (paymentStatus != 1) {
+            
+            response.put("redirectUrl", "/retry-payment"); // URL for retrying payment
+        }
+        return response;
     }
 
-    @GetMapping("api/v1/bookings/{id}")
-    public BookingDto findById(Long id) {
-        return service.findById(id);
+    @GetMapping("/retry-payment")
+    public String retryPayment() {
+        // Logic to display the retry payment page
+        return "Please try again to make the payment.";
+    }
+///
+    
+    @GetMapping("/payment")
+    public ResponseEntity<?> showPaymentPage(HttpSession session) {
+        BookingInitiationDTO bookingInitiationDTO = (BookingInitiationDTO) session.getAttribute("bookingInitiationDTO");
+        if (bookingInitiationDTO == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Your session has expired. Please start a new search.");
+        }
+        HotelDTO hotelDTO = hotelService.findHotelDtoById(bookingInitiationDTO.getHotelId());
+        return ResponseEntity.status(HttpStatus.OK).body(bookingInitiationDTO);
     }
 
-    @PostMapping("api/v1/bookings")
-    @ResponseStatus(HttpStatus.CREATED)
-    public BookingDto create(BookingCreateForm form) {
-        return service.create(form);
+
+    @PostMapping("/initiate")
+    public ResponseEntity<String> initiateBooking(@Valid @RequestBody BookingInitiationDTO bookingInitiationDTO, HttpSession session) {
+        session.setAttribute("bookingInitiationDTO", bookingInitiationDTO);
+        return ResponseEntity.status(HttpStatus.OK).body("Booking initiation successful");
     }
 
-    @PutMapping("api/v1/bookings/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public BookingDto update(Long id, BookingCreateForm form) {
-        return service.update(id, form);
+    @PostMapping("/payment")
+    public ResponseEntity<?> confirmBooking(@Valid @RequestBody PaymentCardDTO paymentDTO, HttpSession session) {
+        BookingInitiationDTO bookingInitiationDTO = (BookingInitiationDTO) session.getAttribute("bookingInitiationDTO");
+        if (bookingInitiationDTO == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Your session has expired. Please start a new search.");
+        }
+        try {
+            Long userId = getLoggedInUserId();
+            BookingDTO bookingDTO = bookingService.confirmBooking(bookingInitiationDTO, userId);
+            
+            return ResponseEntity.status(HttpStatus.OK).body(bookingDTO);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred. Please try again later.");
+        }
     }
 
-    @DeleteMapping("api/v1/bookings/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(Long id) {
-        service.deleteById(id);
+
+
+    // Lấy userId đang đăng nhập
+    private Long getLoggedInUserId() {
+        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // String username = auth.getName();
+        //String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        
+        String jwt = jwtTokenUtil.extractJwtFromRequest(request);
+        String username = jwtTokenUtil.getUsernameFromToken(jwt);
+        //UserDTO userDTO = userService.findUserDTOByUsername(username);
+        
+        Customer customer = customerService.findByUsername(username).orElseThrow();
+        System.out.println(customer.getId());
+        return customer.getId();
     }
+
+    // hiển thị ditail
+    @GetMapping("/confirmation/{bookingId}")
+    public ResponseEntity<BookingDTO> getBookingConfirmation(@PathVariable Long bookingId) {
+        BookingDTO bookingDTO = bookingService.findBookingById(bookingId);
+        if (bookingDTO == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        LocalDate checkinDate = bookingDTO.getCheckinDate();
+        LocalDate checkoutDate = bookingDTO.getCheckoutDate();
+        Long durationDays = ChronoUnit.DAYS.between(checkinDate, checkoutDate); //lấy khoảng thời gian lưu trú
+
+        bookingDTO.setDurationDays(durationDays);
+
+        return ResponseEntity.ok(bookingDTO);
+    }
+
+    @GetMapping("/success")
+    public String successVNPay(){
+        return "thanh toan thanh cong";
+    }
+    
 }

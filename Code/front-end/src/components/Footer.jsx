@@ -5,7 +5,7 @@ import { ReactComponent as XIcon } from '../assets/icons/twitter-x.svg';
 
 const Footer = () => {
   return (
-    <footer className="bg-white py-4 px-6 border-t border-gray-200 fixed bottom-0 left-0 w-full">
+    <footer className="bg-white py-4 px-6 border-t border-gray-200 sticky bottom-0 left-0 w-full">
       <div className="container mx-auto flex flex-wrap justify-between items-center">
         <div className="flex items-center space-x-4">
           <span className="text-gray-500">Copyright © 2024 Sweet Home</span>

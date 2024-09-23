@@ -110,7 +110,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-white text-black flex items-center justify-between px-4 py-4 shadow-md relative">
+    <header className="bg-white text-black flex items-center justify-between px-4 py-4 shadow-md relative sticky top-0 z-50">
       <div className="flex items-center space-x-4">
         <div className="text-black font-bold text-xl">SWEET HOME</div>
       </div>
@@ -358,7 +358,7 @@ const Header = () => {
       {isForgotPasswordPopupOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
           <div className="relative bg-white p-8 rounded-lg shadow-lg w-96">
-            <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={toggleConfirmationPopup}>
+            <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={toggleForgotPasswordPopup}>
               <CloseIcon className="w-6 h-6" />
             </button>
             <h2 className="text-2xl font-bold mb-4">Quên mật khẩu</h2>
