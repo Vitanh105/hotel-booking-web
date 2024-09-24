@@ -1,11 +1,22 @@
 import './App.css';
-import CustomerLayout from './components/customer/CustomerLayout';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import publicRoute from "./router/route";
+import DefaultLayout from "./layout/defaultLayout";
 
 function App() {
   return (
-    <div className="App">
-      <CustomerLayout />
-    </div>
+    <Router>
+      <Routes>
+        {publicRoute.map((router, index) => {
+          let Layout = DefaultLayout;
+          if (router.layout) {
+            Layout = router.layout;
+          }
+          const Pages = router.componet;
+          return <Route key={index} path={router.path} element={<Layout><Pages /></Layout>} />
+        })}
+      </Routes>
+    </Router>
   );
 }
 
