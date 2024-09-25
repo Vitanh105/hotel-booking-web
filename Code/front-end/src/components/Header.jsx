@@ -127,7 +127,7 @@ const Header = () => {
         )}
       </div>
 
-      {/* Hợp tác Popup */}
+      {/* Popup */}
       {isPopupOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
           <div className="relative bg-white p-8 rounded-lg shadow-lg w-96">
@@ -160,8 +160,8 @@ const Header = () => {
                       id="hotelName"
                       type="text"
                       className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                      placeholder="Nhập tên khách sạn"
-                      required
+                        placeholder="Nhập tên khách sạn"
+                        required
                     />
                   </div>
                   <div className="mb-4 flex flex-col items-start">
@@ -170,8 +170,8 @@ const Header = () => {
                       id="hotelAddress"
                       type="text"
                       className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                      placeholder="Nhập địa chỉ khách sạn"
-                      required
+                        placeholder="Nhập địa chỉ khách sạn"
+                        required
                     />
                   </div>
                   <button
@@ -335,9 +335,7 @@ const Header = () => {
               {showTermsError && (
                 <p className="text-red-500 text-sm mb-4">Bạn chưa đồng ý với điều khoản của chúng tôi</p>
               )}
-              <div className='flex flex-col items-end'>
-                <button type="submit" className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-yellow-300">Đăng ký</button>
-              </div>
+              <button type="submit" className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-yellow-300">Đăng ký</button>
               <p className="text-center text-sm mt-4">Bạn đã có tài khoản? <a onClick={switchToLogin} className="text-blue-500 hover:text-blue-700 cursor-pointer">Đăng nhập</a></p>
               <div className="flex justify-center space-x-4 mt-4">
                 <button type="button" className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-200">
