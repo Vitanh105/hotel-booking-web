@@ -23,7 +23,7 @@ public class HotelImageController {
         try {
             Hotel hotel = new Hotel();  // Assuming room object is retrieved using roomId (you would need to implement RoomService for this)
             hotel.setId(hotelId);
-            HotelImage hotelImage = hotelImageService.saveHotelImage(file, hotel);
+            HotelImage hotelImage = hotelImageService.createHotelImage(file, hotel);
             return new ResponseEntity<>(hotelImage, HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -32,11 +32,17 @@ public class HotelImageController {
 
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> getHotelImage(@PathVariable Long id) {
-        return hotelImageService.getHotelImage(id).map(hotelImage -> {
+        return hotelImageService.getHotelImageById(id).map(hotelImage -> {
             HttpHeaders headers = new HttpHeaders();
             headers.set("Content-Type", "image/jpeg");
             return new ResponseEntity<>(hotelImage.getImage(), headers, HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<HotelImage> updateHotelImage(@PathVariable Long id, @RequestBody HotelImage newHotelImage) {
+        HotelImage updatedHotelImage = hotelImageService.updateHotelImage(id, newHotelImage);
+        return updatedHotelImage != null ? new ResponseEntity<>(updatedHotelImage, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/{id}")

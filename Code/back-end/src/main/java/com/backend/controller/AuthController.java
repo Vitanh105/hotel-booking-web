@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
     @Autowired
     UserService userService;
@@ -42,7 +42,7 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> signin(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> signIn(@RequestBody LoginRequest loginRequest) {
 
         Optional<User> user = userService.findByEmail((loginRequest.getEmail()));
         if (user.isEmpty() || !PasswordEncoder.getInstance().matches(loginRequest.getPassword(), user.get().getPassword())) {

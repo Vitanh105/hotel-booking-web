@@ -1,63 +1,45 @@
 package com.backend.service;
 
-import com.backend.dto.PaymentMethodDto;
 import com.backend.model.PaymentMethod;
-import com.backend.form.PaymentMethodCreateForm;
-import com.backend.repository.IPaymentMethodRepository;
-import org.modelmapper.ModelMapper;
+import com.backend.repository.PaymentMethodRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
+public class PaymentMethodService {
+    @Autowired
+    private PaymentMethodRepository paymentMethodRepository;
 
-public class PaymentMethodService implements IPaymentMethodService{
-
-    private  final IPaymentMethodRepository repository;
-    private final ModelMapper modelMapper;
-@Autowired
-    public PaymentMethodService(IPaymentMethodRepository repository, ModelMapper modelMapper) {
-        this.repository = repository;
-        this.modelMapper = modelMapper;
+    public List<PaymentMethod> findAll() {
+        return paymentMethodRepository.findAll();
     }
 
-    @Override
-    public Page<PaymentMethodDto> getAll(int pageNo, int pageSize, String sortBy, String sortDir) {
-        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        Page<PaymentMethod> paymentMethodPage = repository.findAll(pageable);
-        return paymentMethodPage.map(paymentMethod -> modelMapper.map(paymentMethod, PaymentMethodDto.class));
+    public PaymentMethod create(PaymentMethod paymentMethod) {
+        return paymentMethodRepository.save(paymentMethod);
     }
 
-    @Override
-    public PaymentMethodDto create(PaymentMethodCreateForm form) {
-        var paymentMethod =modelMapper.map(form, PaymentMethod.class);
-        var savePaymentMethod=repository.save(paymentMethod);
-        return  modelMapper.map(savePaymentMethod, PaymentMethodDto.class);
+    public Optional<PaymentMethod> findById(Long id) {
+        return paymentMethodRepository.findById(id);
     }
 
-    @Override
-    public PaymentMethodDto findById(Long id) {
-        return repository.findById(id)
-                .map(paymentMethod -> modelMapper.map(paymentMethod, PaymentMethodDto.class))
-                .orElse(null);
+    public PaymentMethod update(Long id, PaymentMethod paymentMethodDetails) {
+        Optional<PaymentMethod> optionalPaymentMethod = paymentMethodRepository.findById(id);
+        if (optionalPaymentMethod.isPresent()) {
+            PaymentMethod existingPaymentMethod = optionalPaymentMethod.get();
+            existingPaymentMethod.setName(paymentMethodDetails.getName());
+            return paymentMethodRepository.save(existingPaymentMethod);
+        }
+        return null;
     }
 
-    @Override
-    public PaymentMethodDto update(Long id, PaymentMethodCreateForm form) {
-        var paymentMethod =repository.findById(id).orElse(null);
-        modelMapper.map(form,paymentMethod);
-        var savePaymentMethod=repository.save(paymentMethod);
-        return  modelMapper.map(savePaymentMethod, PaymentMethodDto.class);
-    }
-
-
-    @Override
-    public void deleteById(Long id) {
-    repository.deleteById(id);
-
+    public boolean deleteById(Long id) {
+        if (paymentMethodRepository.existsById(id)) {
+            paymentMethodRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

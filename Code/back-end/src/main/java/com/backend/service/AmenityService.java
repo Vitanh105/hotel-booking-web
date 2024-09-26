@@ -1,68 +1,49 @@
-package com.backend.service
-        ;
-
-import com.backend.dto.AmenityDto;
+package com.backend.service;
 
 import com.backend.model.Amenity;
 
-import com.backend.form.AmenityCreateForm;
-import com.backend.form.AmenityFilterForm;
-import com.backend.repository.IAmenityRepository;
-import com.backend.specification.AmenitySpecification;
+import com.backend.repository.AmenityRepository;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
-public class AmenityService implements IAmenityService {
+public class AmenityService {
     @Autowired
-    public AmenityService(IAmenityRepository repository, ModelMapper modelMapper) {
-        this.repository = repository;
-        this.modelMapper = modelMapper;
+    private AmenityRepository amenityRepository;
+
+    public List<Amenity> findAll() {
+        return amenityRepository.findAll();
     }
 
-    private final IAmenityRepository repository;
-    private final ModelMapper modelMapper;
-
-    @Override
-    public Page<AmenityDto> findAll(AmenityFilterForm form, int pageNo, int pageSize, String sortBy, String sortDir) {
-        Specification<Amenity> amenity = AmenitySpecification.buildSpec(form);
-        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        Page<Amenity> amenityPage = repository.findAll(amenity, pageable);
-        return amenityPage.map(amenity1 -> modelMapper.map(amenity1, AmenityDto.class));
+    public Amenity create(Amenity amenity) {
+        return amenityRepository.save(amenity);
     }
 
-    @Override
-    public AmenityDto create(AmenityCreateForm form) {
-        var amenity = modelMapper.map(form, Amenity.class);
-        var saveAmenity = repository.save(amenity);
-        return modelMapper.map(saveAmenity, AmenityDto.class);
+    public Optional<Amenity> findById(Long id) {
+        return amenityRepository.findById(id);
     }
 
-    @Override
-    public AmenityDto findById(Long id) {
-        return repository.findById(id)
-                .map(amenity -> modelMapper.map(amenity, AmenityDto.class)).orElse(null);
+    public Amenity update(Long id, Amenity amenityDetails) {
+        Optional<Amenity> amenityOptional = amenityRepository.findById(id);
+        if (amenityOptional.isPresent()) {
+            Amenity amenity = amenityOptional.get();
+            amenity.setAmenity(amenityDetails.getAmenity());
+//            amenity.setRoom(amenityDetails.getRoom());
+            return amenityRepository.save(amenity);
+        } else {
+            throw new RuntimeException("Amenity not found with id " + id);
+        }
     }
 
-    @Override
-    public AmenityDto update(Long id, AmenityCreateForm form) {
-        var amenity = repository.findById(id).orElse(null);
-        modelMapper.map(form, amenity);
-        var saveAmenity = repository.save(amenity);
-        return modelMapper.map(saveAmenity, AmenityDto.class);
-    }
-
-    @Override
     public void deleteById(Long id) {
-        repository.deleteById(id);
-
+        if (amenityRepository.existsById(id)) {
+            amenityRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Amenity not found with id " + id);
+        }
     }
 }

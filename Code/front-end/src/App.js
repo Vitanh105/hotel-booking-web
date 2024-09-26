@@ -5,8 +5,8 @@ import ManagerLayout from './components/manager/ManagerLayout';
 function App() {
   return (
     <div className="App">
-      <CustomerLayout />
-      {/* <ManagerLayout /> */}
+      {/* <CustomerLayout /> */}
+      <ManagerLayout />
     </div>
   );
 }

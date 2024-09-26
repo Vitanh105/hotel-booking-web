@@ -1,66 +1,54 @@
 package com.backend.service;
 
-import com.backend.dto.RoomDto;
 import com.backend.model.Room;
-import com.backend.form.RoomCreateForm;
-import com.backend.form.RoomFilterForm;
-import com.backend.repository.IRoomRepository;
+import com.backend.repository.RoomRepository;
 
-import com.backend.specification.RoomSpecification;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
-public class RoomService  implements  IRoomService{
-    private  final IRoomRepository repository;
-    private final ModelMapper modelMapper;
-@Autowired
-    public RoomService(IRoomRepository repository, ModelMapper modelMapper) {
-        this.repository = repository;
-        this.modelMapper = modelMapper;
+public class RoomService {
+    @Autowired
+    private RoomRepository roomRepository;
+
+    public List<Room> findAll() {
+        return roomRepository.findAll();
     }
 
-    @Override
-    public Page<RoomDto> findAll(RoomFilterForm form, int pageNo, int pageSize, String sortBy, String sortDir) {
-        Specification<Room> spec = RoomSpecification.buildSpec(form);
-        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        Page<Room> roomPage =repository.findAll(spec,pageable);
-        return roomPage.map(room -> modelMapper.map(room, RoomDto.class));
-
-}
-
-    @Override
-    public RoomDto create(RoomCreateForm form) {
-        var room =modelMapper.map(form, Room.class);
-        var saveRoom=repository.save(room);
-        return  modelMapper.map(saveRoom, RoomDto.class);
+    public Room create(Room room) {
+        return roomRepository.save(room);
     }
 
-    @Override
-    public RoomDto findById(Long id) {
-        return repository.findById(id)
-                .map(room -> modelMapper.map(room, RoomDto.class))
-                .orElse(null);
+    public Optional<Room> findById(Long id) {
+        return roomRepository.findById(id);
     }
 
-    @Override
-    public RoomDto update(Long id, RoomCreateForm form) {
-        var room =repository.findById(id).orElse(null);
-        modelMapper.map(form,room);
-        var saveRoom=repository.save(room);
-        return  modelMapper.map(saveRoom, RoomDto.class);
+    public Room update(Long id, Room room) {
+        Optional<Room> optionalRoom = roomRepository.findById(id);
+        if (optionalRoom.isPresent()) {
+            Room existingRoom = optionalRoom.get();
+            existingRoom.setRoomName(room.getRoomName());
+            existingRoom.setPrice(room.getPrice());
+            existingRoom.setStatus(room.getStatus());
+            existingRoom.setRoomType(room.getRoomType());
+            existingRoom.setHotel(room.getHotel());
+            existingRoom.setAmenities(room.getAmenities());
+            existingRoom.setImageId(room.getImageId());
+            existingRoom.setBooking(room.getBooking());
+            existingRoom.setComment(room.getComment());
+            return roomRepository.save(existingRoom);
+        }
+        return null;
     }
 
-    @Override
-    public void deleteById(Long id) {
-    repository.deleteById(id);
-
+    public boolean deleteById(Long id) {
+        if (roomRepository.existsById(id)) {
+            roomRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

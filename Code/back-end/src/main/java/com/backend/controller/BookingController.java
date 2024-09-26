@@ -1,57 +1,55 @@
 package com.backend.controller;
 
-import com.backend.dto.BookingDto;
-
-import com.backend.form.BookingCreateForm;
-import com.backend.form.BookingFilterForm;
-
+import com.backend.model.Booking;
 import com.backend.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+
 @RestController
-@ResponseStatus
+@RequestMapping("/bookings")
 public class BookingController {
-    private final BookingService service;
-
     @Autowired
-    public BookingController(BookingService service) {
-        this.service = service;
+    private BookingService bookingService;
+
+    @GetMapping
+    public ResponseEntity<List<Booking>> findAll() {
+        List<Booking> bookings = bookingService.findAll();
+        return ResponseEntity.ok(bookings);
     }
 
-    @GetMapping("api/v1/bookings")
-    public Page<BookingDto> findAll(
-            BookingFilterForm form,
-            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-            @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
-            @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir) {
-        Page<BookingDto> list = service.findAll(form, pageNo, pageSize, sortBy, sortDir);
-        return list;
+    @GetMapping("/{id}")
+    public ResponseEntity<Booking> findById(@PathVariable Long id) {
+        Optional<Booking> booking = bookingService.findById(id);
+        return booking.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("api/v1/bookings/{id}")
-    public BookingDto findById(Long id) {
-        return service.findById(id);
+    @PostMapping
+    public ResponseEntity<Booking> create(@RequestBody Booking booking) {
+        Booking createdBooking = bookingService.create(booking);
+        return ResponseEntity.ok(createdBooking);
     }
 
-    @PostMapping("api/v1/bookings")
-    @ResponseStatus(HttpStatus.CREATED)
-    public BookingDto create(BookingCreateForm form) {
-        return service.create(form);
+    @PutMapping("/{id}")
+    public ResponseEntity<Booking> update(@PathVariable Long id, @RequestBody Booking bookingDetails) {
+        Booking updatedBooking = bookingService.update(id, bookingDetails);
+        if (updatedBooking != null) {
+            return ResponseEntity.ok(updatedBooking);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @PutMapping("api/v1/bookings/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public BookingDto update(Long id, BookingCreateForm form) {
-        return service.update(id, form);
-    }
-
-    @DeleteMapping("api/v1/bookings/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(Long id) {
-        service.deleteById(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+        boolean isDeleted = bookingService.deleteById(id);
+        if (isDeleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

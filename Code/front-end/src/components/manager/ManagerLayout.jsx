@@ -1,12 +1,10 @@
 import React from 'react'
-import RoomImageUpload from './RoomImageUpload'
-import RoomImageDisplay from './RoomImageDisplay'
+import RoomImageManager from './roomImage/RoomImageManager';
 
 const ManagerLayout = () => {
     return (
         <div>
-            <RoomImageUpload />
-            <RoomImageDisplay />
+            <RoomImageManager />
         </div>
     )
 }

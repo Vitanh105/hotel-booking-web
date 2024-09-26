@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/room-images")
@@ -23,20 +24,32 @@ public class RoomImageController {
         try {
             Room room = new Room();  // Assuming room object is retrieved using roomId (you would need to implement RoomService for this)
             room.setId(roomId);
-            RoomImage roomImage = roomImageService.saveRoomImage(file, room);
+            RoomImage roomImage = roomImageService.createRoomImage(file, room);
             return new ResponseEntity<>(roomImage, HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<RoomImage>> getAllRoomImages() {
+        List<RoomImage> roomImages = roomImageService.getAllRoomImage();
+        return new ResponseEntity<>(roomImages, HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> getRoomImage(@PathVariable Long id) {
-        return roomImageService.getRoomImage(id).map(roomImage -> {
+        return roomImageService.getRoomImageById(id).map(roomImage -> {
             HttpHeaders headers = new HttpHeaders();
             headers.set("Content-Type", "image/jpeg");
             return new ResponseEntity<>(roomImage.getImage(), headers, HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<RoomImage> updateRoomImage(@PathVariable Long id, @RequestBody RoomImage newRoomImage) {
+        RoomImage updatedRoomImage = roomImageService.updateRoomImage(id, newRoomImage);
+        return updatedRoomImage != null ? new ResponseEntity<>(updatedRoomImage, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/{id}")

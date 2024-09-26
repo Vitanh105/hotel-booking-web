@@ -1,56 +1,55 @@
 package com.backend.controller;
 
-import com.backend.dto.HotelDto;
-import com.backend.form.HotelCreateForm;
-import com.backend.form.HotelFilterForm;
+import com.backend.model.Hotel;
 import com.backend.service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+
 @RestController
-@ResponseStatus
+@RequestMapping("/hotels")
 public class HotelController {
-    private final HotelService service;
-
     @Autowired
-    public HotelController(HotelService service) {
-        this.service = service;
+    private HotelService hotelService;
+
+    @GetMapping
+    public ResponseEntity<List<Hotel>> findAll() {
+        List<Hotel> hotels = hotelService.findAll();
+        return ResponseEntity.ok(hotels);
     }
 
-    @GetMapping("api/v1/hotels")
-    public Page<HotelDto> findAll(
-            HotelFilterForm form,
-            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-            @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
-            @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir) {
-        Page<HotelDto> list = service.findAll(form, pageNo, pageSize, sortBy, sortDir);
-        return list;
+    @GetMapping("/{id}")
+    public ResponseEntity<Hotel> findById(@PathVariable Long id) {
+        Optional<Hotel> hotel = hotelService.findById(id);
+        return hotel.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("api/v1/hotels/{id}")
-    public HotelDto findById(Long id) {
-        return service.findById(id);
+    @PostMapping
+    public ResponseEntity<Hotel> create(@RequestBody Hotel hotel) {
+        Hotel createdHotel = hotelService.create(hotel);
+        return ResponseEntity.ok(createdHotel);
     }
 
-    @PostMapping("api/v1/hotels")
-    @ResponseStatus(HttpStatus.CREATED)
-    public HotelDto create(HotelCreateForm form) {
-        return service.create(form);
+    @PutMapping("/{id}")
+    public ResponseEntity<Hotel> updateHotel(@PathVariable Long id, @RequestBody Hotel hotelDetails) {
+        Hotel updatedHotel = hotelService.update(id, hotelDetails);
+        if (updatedHotel != null) {
+            return ResponseEntity.ok(updatedHotel);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @PutMapping("api/v1/hotels/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public HotelDto update(Long id, HotelCreateForm form) {
-        return service.update(id, form);
-    }
-
-    @DeleteMapping("api/v1/hotels/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(Long id) {
-        service.deleteById(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteHotel(@PathVariable Long id) {
+        boolean isDeleted = hotelService.deleteById(id);
+        if (isDeleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

@@ -1,63 +1,56 @@
 package com.backend.controller;
 
 
-import com.backend.dto.RoomTypeDto;
-
-import com.backend.form.RoomTypeCreateForm;
-import com.backend.form.RoomTypeFilterForm;
+import com.backend.model.RoomType;
 import com.backend.service.RoomTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+
 @RestController
-@ResponseStatus
+@RequestMapping("/room-types")
 public class RoomTypeController {
+    @Autowired
+    private RoomTypeService roomTypeService;
 
-
-    private final RoomTypeService service;
-@Autowired
-    public RoomTypeController(RoomTypeService service) {
-        this.service = service;
+    @GetMapping
+    public ResponseEntity<List<RoomType>> findAll() {
+        List<RoomType> roomTypes = roomTypeService.findAll();
+        return ResponseEntity.ok(roomTypes);
     }
 
-    @GetMapping("api/v1/roomTypes")
-    public Page<RoomTypeDto> findAll(
-            RoomTypeFilterForm form,
-            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-            @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
-            @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir) {
-        Page<RoomTypeDto> list = service.findAll(form, pageNo, pageSize, sortBy, sortDir);
-        return list;
+    @GetMapping("/{id}")
+    public ResponseEntity<RoomType> findById(@PathVariable Long id) {
+        Optional<RoomType> roomType = roomTypeService.findById(id);
+        return roomType.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("api/v1/roomTypes/{id}")
-    public RoomTypeDto findById(Long id) {
-        return service.findById(id);
+    @PostMapping
+    public ResponseEntity<RoomType> create(@RequestBody RoomType roomType) {
+        RoomType createdRoomType = roomTypeService.create(roomType);
+        return ResponseEntity.ok(createdRoomType);
     }
 
-
-    @PostMapping("api/v1/roomTypes")
-    @ResponseStatus(HttpStatus.CREATED)
-    public RoomTypeDto create(RoomTypeCreateForm form) {
-        return service.create(form);
+    @PutMapping("/{id}")
+    public ResponseEntity<RoomType> update(@PathVariable Long id, @RequestBody RoomType roomTypeDetails) {
+        RoomType updatedRoomType = roomTypeService.update(id, roomTypeDetails);
+        if (updatedRoomType != null) {
+            return ResponseEntity.ok(updatedRoomType);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-
-    @PutMapping("api/v1/roomTypes/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public RoomTypeDto update(Long id, RoomTypeCreateForm form) {
-        return service.update(id, form);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteRoomType(@PathVariable Long id) {
+        boolean isDeleted = roomTypeService.deleteById(id);
+        if (isDeleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
-
-
-    @DeleteMapping("api/v1/roomTypes/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(Long id) {
-        service.deleteById(id);
-    }
-
-
 }

@@ -1,57 +1,56 @@
 package com.backend.controller;
 
-import com.backend.dto.CityDto;
-
-import com.backend.form.CityCreateForm;
-import com.backend.form.CityFilterForm;
-
+import com.backend.model.City;
 import com.backend.service.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+
 @RestController
-@ResponseStatus
+@RequestMapping("/cities")
 public class CityController {
-    private final CityService service;
-
     @Autowired
-    public CityController(CityService service) {
-        this.service = service;
+    private CityService cityService;
+
+    @GetMapping
+    public ResponseEntity<List<City>> findAll() {
+        List<City> cities = cityService.findAll();
+        return ResponseEntity.ok(cities);
     }
 
-    @GetMapping("api/v1/cities")
-    public Page<CityDto> findAll(
-            CityFilterForm form,
-            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-            @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
-            @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir) {
-        Page<CityDto> list = service.findAll(form, pageNo, pageSize, sortBy, sortDir);
-        return list;
+    @GetMapping("/{id}")
+    public ResponseEntity<City> findById(@PathVariable Long id) {
+        Optional<City> cityOptional = cityService.findById(id);
+        return cityOptional.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("api/v1/cities/{id}")
-    public CityDto findById(Long id) {
-        return service.findById(id);
+    @PostMapping
+    public ResponseEntity<City> create(@RequestBody City city) {
+        City createdCity = cityService.create(city);
+        return ResponseEntity.ok(createdCity);
     }
 
-    @PostMapping("api/v1/cities")
-    @ResponseStatus(HttpStatus.CREATED)
-    public CityDto create(CityCreateForm form) {
-        return service.create(form);
+    @PutMapping("/{id}")
+    public ResponseEntity<City> update(@PathVariable Long id, @RequestBody City cityDetails) {
+        try {
+            City updatedCity = cityService.update(id, cityDetails);
+            return ResponseEntity.ok(updatedCity);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @PutMapping("api/v1/cities/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public CityDto update(Long id, CityCreateForm form) {
-        return service.update(id, form);
-    }
-
-    @DeleteMapping("api/v1/cities/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(Long id) {
-        service.deleteById(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+        try {
+            cityService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

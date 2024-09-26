@@ -1,67 +1,52 @@
 package com.backend.service;
 
-import com.backend.dto.BookingDto;
 import com.backend.model.Booking;
-import com.backend.form.BookingCreateForm;
-import com.backend.form.BookingFilterForm;
-import com.backend.repository.IBookingRepository;
-import com.backend.specification.BookingSpecification;
-import org.modelmapper.ModelMapper;
+import com.backend.repository.BookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 
-public class BookingService implements IBookingService {
+public class BookingService {
+    @Autowired
+    private BookingRepository bookingRepository;
 
-    private  final IBookingRepository repository;
-    private  final ModelMapper modelMapper;
-@Autowired
-    public BookingService(IBookingRepository repository, ModelMapper modelMapper) {
-        this.repository = repository;
-        this.modelMapper = modelMapper;
+    public List<Booking> findAll() {
+        return bookingRepository.findAll();
     }
 
-    @Override
-    public Page<BookingDto> findAll(BookingFilterForm form, int pageNo, int pageSize, String sortBy, String sortDir) {
-        Specification<Booking> spec = BookingSpecification.buildSpec(form);
-        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        Page<Booking> bookingPage = repository.findAll(spec,pageable );
-        return bookingPage.map(booking -> modelMapper.map(booking, BookingDto.class));
+    public Booking create(Booking booking) {
+        return bookingRepository.save(booking);
     }
 
-
-    @Override
-    public BookingDto create(BookingCreateForm form) {
-        var booking =modelMapper.map(form, Booking.class);
-        var saveBooking=repository.save(booking);
-        return  modelMapper.map(saveBooking, BookingDto.class);
+    public Optional<Booking> findById(Long id) {
+        return bookingRepository.findById(id);
     }
 
-    @Override
-    public BookingDto findById(Long id) {
-        return repository.findById(id)
-                .map(booking -> modelMapper.map(booking,BookingDto.class))
-                .orElse(null);
+    public Booking update(Long id, Booking booking) {
+        Optional<Booking> optionalBooking = bookingRepository.findById(id);
+        if (optionalBooking.isPresent()) {
+            Booking existingBooking = optionalBooking.get();
+            existingBooking.setHotel(booking.getHotel());
+            existingBooking.setRoom(booking.getRoom());
+            existingBooking.setUser(booking.getUser());
+            existingBooking.setPaymentMethod(booking.getPaymentMethod());
+            existingBooking.setCheckInDate(booking.getCheckInDate());
+            existingBooking.setCheckOutDate(booking.getCheckOutDate());
+            existingBooking.setTotalAmount(booking.getTotalAmount());
+            return bookingRepository.save(existingBooking);
+        }
+        return null;
     }
 
-    @Override
-    public BookingDto update(Long id, BookingCreateForm form) {
-        var booking =repository.findById(id).orElse(null);
-        modelMapper.map(form,booking);
-        var saverBooking=repository.save(booking);
-        return  modelMapper.map(saverBooking, BookingDto.class);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-    repository.deleteById(id);
-
+    public boolean deleteById(Long id) {
+        if (bookingRepository.existsById(id)) {
+            bookingRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }
