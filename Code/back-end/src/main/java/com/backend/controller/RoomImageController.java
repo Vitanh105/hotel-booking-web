@@ -1,58 +1,47 @@
 package com.backend.controller;
 
-import com.backend.dto.HotelDto;
-import com.backend.dto.RoomImageDto;
-import com.backend.form.HotelCreateForm;
-import com.backend.form.HotelFilterForm;
-import com.backend.form.RoomImageCreateForm;
-import com.backend.form.RoomImageFilterForm;
+import com.backend.model.Room;
+import com.backend.model.RoomImage;
 import com.backend.service.RoomImageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
-@ResponseStatus
+@RequestMapping("/room-images")
 public class RoomImageController {
-    private  final RoomImageService service;
-@Autowired
-    public RoomImageController(RoomImageService service) {
-        this.service = service;
+    @Autowired
+    private RoomImageService roomImageService;
+
+    @PostMapping("/upload")
+    public ResponseEntity<RoomImage> uploadRoomImage(@RequestParam("image") MultipartFile file, @RequestParam("roomId") Long roomId) {
+        try {
+            Room room = new Room();  // Assuming room object is retrieved using roomId (you would need to implement RoomService for this)
+            room.setId(roomId);
+            RoomImage roomImage = roomImageService.saveRoomImage(file, room);
+            return new ResponseEntity<>(roomImage, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-
-    @GetMapping("api/v1/roomImages")
-    public Page<RoomImageDto> findAll(
-            RoomImageFilterForm form,
-            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-            @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
-            @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir) {
-        Page<RoomImageDto> list = service.findAll(form, pageNo, pageSize, sortBy, sortDir);
-        return list;
-    }
-    @GetMapping("api/v1/roomImages/{id}")
-    public RoomImageDto findById(Long id) {
-        return service.findById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<byte[]> getRoomImage(@PathVariable Long id) {
+        return roomImageService.getRoomImage(id).map(roomImage -> {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Content-Type", "image/jpeg");
+            return new ResponseEntity<>(roomImage.getImage(), headers, HttpStatus.OK);
+        }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping("api/v1/roomImages")
-    @ResponseStatus(HttpStatus.CREATED)
-    public RoomImageDto create(RoomImageCreateForm form) {
-        return service.create(form);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteRoomImage(@PathVariable Long id) {
+        roomImageService.deleteRoomImage(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-    @PutMapping("api/v1/roomImages/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public RoomImageDto update(Long id, RoomImageCreateForm form) {
-        return service.update(id, form);
-    }
-
-    @DeleteMapping("api/v1/roomImages/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(Long id) {
-        service.deleteById(id);
-    }
-
 }

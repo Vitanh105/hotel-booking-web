@@ -1,6 +1,6 @@
 package com.backend.repository;
 
-import com.backend.entity.City;
+import com.backend.model.City;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

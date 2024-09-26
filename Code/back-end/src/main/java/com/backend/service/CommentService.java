@@ -1,15 +1,11 @@
 package com.backend.service;
 
 import com.backend.dto.CommentDto;
-import com.backend.dto.HotelDto;
-import com.backend.entity.Comment;
-import com.backend.entity.Hotel;
+import com.backend.model.Comment;
 import com.backend.form.CommentCreateForm;
 import com.backend.form.CommentFilterForm;
-import com.backend.form.HotelCreateForm;
 import com.backend.repository.ICommentRepository;
 import com.backend.specification.CommentSpecification;
-import com.backend.specification.HotelSpecification;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

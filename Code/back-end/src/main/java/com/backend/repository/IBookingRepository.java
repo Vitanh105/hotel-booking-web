@@ -1,6 +1,6 @@
 package com.backend.repository;
 
-import com.backend.entity.Booking;
+import com.backend.model.Booking;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

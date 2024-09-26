@@ -1,7 +1,7 @@
 package com.backend.controller;
 
 import com.backend.jwt.JwtTokenStore;
-import com.backend.entity.User;
+import com.backend.model.User;
 import com.backend.request.LoginRequest;
 import com.backend.response.ResponseObject;
 import com.backend.security.PasswordEncoder;

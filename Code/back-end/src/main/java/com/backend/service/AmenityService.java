@@ -3,7 +3,7 @@ package com.backend.service
 
 import com.backend.dto.AmenityDto;
 
-import com.backend.entity.Amenity;
+import com.backend.model.Amenity;
 
 import com.backend.form.AmenityCreateForm;
 import com.backend.form.AmenityFilterForm;

@@ -2,8 +2,7 @@ package com.backend.service;
 
 import com.backend.dto.CityDto;
 
-import com.backend.dto.HotelDto;
-import com.backend.entity.City;
+import com.backend.model.City;
 
 import com.backend.form.CityCreateForm;
 import com.backend.form.CityFilterForm;

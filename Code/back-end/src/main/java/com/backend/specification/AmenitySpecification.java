@@ -1,9 +1,7 @@
 package com.backend.specification;
 
-import com.backend.entity.Amenity;
-import com.backend.entity.City;
+import com.backend.model.Amenity;
 import com.backend.form.AmenityFilterForm;
-import com.backend.form.CityFilterForm;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;

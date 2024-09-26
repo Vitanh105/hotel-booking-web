@@ -1,14 +1,11 @@
 package com.backend.service;
 
 import com.backend.dto.BookingDto;
-import com.backend.dto.HotelDto;
-import com.backend.entity.Booking;
-import com.backend.entity.Hotel;
+import com.backend.model.Booking;
 import com.backend.form.BookingCreateForm;
 import com.backend.form.BookingFilterForm;
 import com.backend.repository.IBookingRepository;
 import com.backend.specification.BookingSpecification;
-import com.backend.specification.HotelSpecification;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,8 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import java.security.PrivateKey;
 
 @Service
 

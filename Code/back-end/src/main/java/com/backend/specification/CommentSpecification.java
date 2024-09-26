@@ -1,6 +1,6 @@
 package com.backend.specification;
 
-import com.backend.entity.Comment;
+import com.backend.model.Comment;
 import com.backend.form.CommentFilterForm;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;

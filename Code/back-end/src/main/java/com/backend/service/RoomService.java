@@ -1,9 +1,7 @@
 package com.backend.service;
 
-import com.backend.dto.HotelDto;
 import com.backend.dto.RoomDto;
-import com.backend.entity.Hotel;
-import com.backend.entity.Room;
+import com.backend.model.Room;
 import com.backend.form.RoomCreateForm;
 import com.backend.form.RoomFilterForm;
 import com.backend.repository.IRoomRepository;

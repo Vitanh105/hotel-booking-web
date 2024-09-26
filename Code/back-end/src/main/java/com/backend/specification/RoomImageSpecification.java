@@ -1,8 +1,6 @@
 package com.backend.specification;
 
-import com.backend.entity.Room;
-import com.backend.entity.RoomImage;
-import com.backend.form.RoomFilterForm;
+import com.backend.model.RoomImage;
 import com.backend.form.RoomImageFilterForm;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;

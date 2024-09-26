@@ -1,9 +1,7 @@
 package com.backend.specification;
 
-import com.backend.entity.Booking;
-import com.backend.entity.Hotel;
+import com.backend.model.Booking;
 import com.backend.form.BookingFilterForm;
-import com.backend.form.HotelFilterForm;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;

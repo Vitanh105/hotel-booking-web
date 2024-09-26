@@ -1,6 +1,6 @@
 package com.backend.repository;
 
-import com.backend.entity.Room;
+import com.backend.model.Room;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

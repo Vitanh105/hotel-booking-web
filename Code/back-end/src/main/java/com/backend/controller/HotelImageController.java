@@ -1,44 +1,47 @@
 package com.backend.controller;
 
-import com.backend.dto.HotelImageDto;
-import com.backend.form.HotelImageCreateForm;
-import com.backend.service.IHotelImageService;
+import com.backend.model.Hotel;
+import com.backend.model.HotelImage;
+import com.backend.service.HotelImageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
-@RequestMapping
+@RequestMapping("/hotel-images")
 public class HotelImageController {
-
-
-    private final IHotelImageService service;
-
     @Autowired
+    private HotelImageService hotelImageService;
 
-    public HotelImageController(IHotelImageService service) {
-        this.service = service;
+    @PostMapping("/upload")
+    public ResponseEntity<HotelImage> uploadHotelImage(@RequestParam("image") MultipartFile file, @RequestParam("hotelId") Long hotelId) {
+        try {
+            Hotel hotel = new Hotel();  // Assuming room object is retrieved using roomId (you would need to implement RoomService for this)
+            hotel.setId(hotelId);
+            HotelImage hotelImage = hotelImageService.saveHotelImage(file, hotel);
+            return new ResponseEntity<>(hotelImage, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @GetMapping("api/v1/hotelImages")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void create(HotelImageCreateForm form) {
-        service.create(form);
+    @GetMapping("/{id}")
+    public ResponseEntity<byte[]> getHotelImage(@PathVariable Long id) {
+        return hotelImageService.getHotelImage(id).map(hotelImage -> {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Content-Type", "image/jpeg");
+            return new ResponseEntity<>(hotelImage.getImage(), headers, HttpStatus.OK);
+        }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("api/v1/hotelImages/{id}")
-    public HotelImageDto findById(Long id) {
-        return service.getById(id);
-    }
-
-    @PutMapping("api/v1/hotelImages/{id}")
-    public void update(Long id, HotelImageDto form) {
-        service.updateById(id, form);
-    }
-
-    @DeleteMapping("api/v1/hotelImages/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(Long id) {
-        service.deleteById(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteHotelImage(@PathVariable Long id) {
+        hotelImageService.deleteHotelImage(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

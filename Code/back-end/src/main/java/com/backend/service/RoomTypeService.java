@@ -1,13 +1,10 @@
 package com.backend.service;
 
-import com.backend.dto.RoomDto;
 import com.backend.dto.RoomTypeDto;
-import com.backend.entity.Room;
-import com.backend.entity.RoomType;
+import com.backend.model.RoomType;
 import com.backend.form.RoomTypeCreateForm;
 import com.backend.form.RoomTypeFilterForm;
 import com.backend.repository.IRoomTypeRepository;
-import com.backend.specification.RoomSpecification;
 import com.backend.specification.RoomTypeSpecification;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

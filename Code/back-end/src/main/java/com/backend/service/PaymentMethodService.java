@@ -1,9 +1,7 @@
 package com.backend.service;
 
-import com.backend.dto.HotelDto;
 import com.backend.dto.PaymentMethodDto;
-import com.backend.entity.Hotel;
-import com.backend.entity.PaymentMethod;
+import com.backend.model.PaymentMethod;
 import com.backend.form.PaymentMethodCreateForm;
 import com.backend.repository.IPaymentMethodRepository;
 import org.modelmapper.ModelMapper;

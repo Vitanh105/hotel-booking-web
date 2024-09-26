@@ -1,4 +1,4 @@
-package com.backend.entity;
+package com.backend.model;
 
 import jakarta.persistence.*;
 
@@ -16,8 +16,9 @@ public class HotelImage {
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
 
-    @Column(name = "image_url", length = 500, nullable = false)
-    private String imageUrl;
+    @Lob
+    @Column(name = "image", columnDefinition = "BLOB")
+    private byte[] image;
 
     @Column(name = "created_at", updatable = false)
     private LocalDate createdAt;
@@ -25,12 +26,13 @@ public class HotelImage {
     @Column(name = "updated_at", updatable = true)
     private LocalDate updatedAt;
 
-    public HotelImage() {}
+    public HotelImage() {
+    }
 
-    public HotelImage(Long id, Hotel hotel, String imageUrl, LocalDate createdAt, LocalDate updatedAt) {
+    public HotelImage(Long id, Hotel hotel, byte[] image, LocalDate createdAt, LocalDate updatedAt) {
         this.id = id;
         this.hotel = hotel;
-        this.imageUrl = imageUrl;
+        this.image = image;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -51,12 +53,11 @@ public class HotelImage {
         this.hotel = hotel;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public byte[] getImage() {
+        return image;
     }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     public LocalDate getCreatedAt() {
