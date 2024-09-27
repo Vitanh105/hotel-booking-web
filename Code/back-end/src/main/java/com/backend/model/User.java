@@ -46,8 +46,7 @@ public class User implements Serializable {
     private Role role;
 
     @Lob
-    @Column(name = "avatar", columnDefinition = "LONGBLOB", nullable = true)
-
+    @Column(name = "avatar", columnDefinition = "BLOB", nullable = true)
     private byte[] avatar;
 
     @OneToMany(mappedBy = "user")

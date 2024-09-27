@@ -22,13 +22,18 @@ public class UserService {
         return userRepository.save(newUser);
     }
 
-    public User update(User updateUser) {
-
-        Optional<User> optionalUser = userRepository.findById(updateUser.getId());
-
-        if (optionalUser.isEmpty()) return null;
-
-        return userRepository.save(updateUser);
+    public User update(Long id, User updateUser) {
+        return userRepository.findById(id).map(user -> {
+            user.setFullName(updateUser.getFullName());
+            user.setAge(updateUser.getAge());
+            user.setGender(updateUser.getGender());
+            user.setPhoneNumber(updateUser.getPhoneNumber());
+            user.setIdentity(updateUser.getIdentity());
+            user.setAddress(updateUser.getAddress());
+            user.setRole(updateUser.getRole());
+            user.setAvatar(updateUser.getAvatar());
+            return userRepository.save(user);
+        }).orElseThrow(() -> new RuntimeException("User not found with id " + id));
     }
 
 
@@ -61,14 +66,29 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    public Optional<User> findByFullName(String fullName) {
+        return userRepository.findByFullName(fullName);
     }
 
     public void delete(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         userRepository.delete(user);
+    }
+
+    public User changPassword(User updatedUser){
+        Long id = updatedUser.getId();
+        Optional<User> existingUser = userRepository.findById(id);
+        if (existingUser.isPresent()) {
+            User user = existingUser.get();
+            user.setPassword(updatedUser.getPassword());
+            return userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("User not found with id: " + id);
+        }
     }
 }

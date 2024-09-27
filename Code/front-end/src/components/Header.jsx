@@ -1,8 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { ReactComponent as UserIcon } from '../assets/icons/user.svg';
 import { ReactComponent as CloseIcon } from '../assets/icons/close.svg';
 import { ReactComponent as GoogleIcon } from '../assets/icons/google.svg';
 import { ReactComponent as FacebookIcon } from '../assets/icons/facebook.svg';
+import { AuthContext } from '../AuthProvider';
+import { login, loginRequest } from '../services/Api';
 
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -18,8 +20,43 @@ const Header = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [showTermsError, setShowTermsError] = useState(false);
-
   const dropdownRef = useRef(null);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { login } = useContext(AuthContext);
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleSubmitSignIn = async (e) => {
+    e.preventDefault();
+    console.log("email:", email);
+    console.log("password:", password);
+  
+    const result = await login(email, password);
+    console.log("result:", result);
+  
+    // Check if result is valid and has success property
+    if (result && result.success) {
+      const token = result.data.message; // Adjust this based on your actual response structure
+      const user = result.data; // Adjust this based on your actual response structure
+  
+      // Assuming you have a login function in your context to store the token
+      login(token, user);
+  
+      alert("Đăng nhập thành công");
+      // navigate('/'); // Uncomment this line if you're using react-router for navigation
+    } else {
+      console.log("Login failed:", result);
+      alert("Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
+    }
+  };
+  
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -160,8 +197,8 @@ const Header = () => {
                       id="hotelName"
                       type="text"
                       className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                        placeholder="Nhập tên khách sạn"
-                        required
+                      placeholder="Nhập tên khách sạn"
+                      required
                     />
                   </div>
                   <div className="mb-4 flex flex-col items-start">
@@ -170,8 +207,8 @@ const Header = () => {
                       id="hotelAddress"
                       type="text"
                       className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                        placeholder="Nhập địa chỉ khách sạn"
-                        required
+                      placeholder="Nhập địa chỉ khách sạn"
+                      required
                     />
                   </div>
                   <button
@@ -199,6 +236,8 @@ const Header = () => {
               <div className="mb-4 flex flex-col items-start">
                 <label htmlFor="loginEmail" className="block text-sm font-medium text-gray-700">Email:</label>
                 <input
+                  onChange={handleEmailChange}
+                  value={email}
                   id="loginEmail"
                   type="email"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -210,6 +249,8 @@ const Header = () => {
                 <label htmlFor="loginPassword" className="block text-sm font-medium text-gray-700">Mật khẩu:</label>
                 <div className="relative w-full">
                   <input
+                    onChange={handlePasswordChange}
+                    value={password}
                     id="loginPassword"
                     type={showPassword ? "text" : "password"}
                     className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -235,7 +276,7 @@ const Header = () => {
               </div>
               <div className="flex justify-between items-center mb-4">
                 <a onClick={toggleForgotPasswordPopup} className="text-sm text-blue-500 hover:text-blue-700 cursor-pointer">Quên mật khẩu?</a>
-                <button type="submit" className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-yellow-300">Đăng nhập</button>
+                <button onClick={handleSubmitSignIn} type="submit" className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-yellow-300">Đăng nhập</button>
               </div>
               <p className="text-center text-sm mb-4">Chưa có tài khoản? <a onClick={switchToRegister} className="text-blue-500 hover:text-blue-700 cursor-pointer">Đăng ký</a></p>
               <div className="flex justify-center space-x-4">
