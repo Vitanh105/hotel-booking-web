@@ -45,7 +45,6 @@ public class JwtInterceptor implements HandlerInterceptor {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "Invalid token");
             return false;
         }
-
     }
 
     public String extractTokenFromRequest(HttpServletRequest request) {

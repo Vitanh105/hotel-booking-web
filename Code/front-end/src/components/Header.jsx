@@ -5,6 +5,7 @@ import { ReactComponent as GoogleIcon } from '../assets/icons/google.svg';
 import { ReactComponent as FacebookIcon } from '../assets/icons/facebook.svg';
 import { AuthContext } from '../AuthProvider';
 import { login, loginRequest } from '../services/Api';
+import AuthService from '../services/AuthService';
 
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -21,39 +22,23 @@ const Header = () => {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [showTermsError, setShowTermsError] = useState(false);
   const dropdownRef = useRef(null);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { login } = useContext(AuthContext);
+  const [loginData, setLoginData] = useState({
+    // email: '',
+    // password: '',
+  });
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
+  const handleChange = (e) => {
+    setLoginData({ ...loginData, [e.target.name]: e.target.value });
   };
 
   const handleSubmitSignIn = async (e) => {
     e.preventDefault();
-    console.log("email:", email);
-    console.log("password:", password);
-  
-    const result = await login(email, password);
-    console.log("result:", result);
-  
-    // Check if result is valid and has success property
-    if (result && result.success) {
-      const token = result.data.message; // Adjust this based on your actual response structure
-      const user = result.data; // Adjust this based on your actual response structure
-  
-      // Assuming you have a login function in your context to store the token
-      login(token, user);
-  
-      alert("Đăng nhập thành công");
-      // navigate('/'); // Uncomment this line if you're using react-router for navigation
-    } else {
-      console.log("Login failed:", result);
-      alert("Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
+    try {
+      const response = await AuthService.signIn(loginData);
+      alert(response.message); // Handle success message
+      // Store token in local storage or handle user session
+    } catch (error) {
+      alert(error.response.data.message); // Handle error message
     }
   };
   
@@ -226,7 +211,7 @@ const Header = () => {
 
       {/* Login Popup */}
       {isLoginPopupOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50" onSubmit={handleSubmitSignIn}>
           <div className="relative bg-white p-8 rounded-lg shadow-lg w-96">
             <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={toggleLoginPopup}>
               <CloseIcon className="w-6 h-6" />
@@ -236,8 +221,8 @@ const Header = () => {
               <div className="mb-4 flex flex-col items-start">
                 <label htmlFor="loginEmail" className="block text-sm font-medium text-gray-700">Email:</label>
                 <input
-                  onChange={handleEmailChange}
-                  value={email}
+                  onChange={handleChange}
+                  value={loginData.email}
                   id="loginEmail"
                   type="email"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -249,8 +234,8 @@ const Header = () => {
                 <label htmlFor="loginPassword" className="block text-sm font-medium text-gray-700">Mật khẩu:</label>
                 <div className="relative w-full">
                   <input
-                    onChange={handlePasswordChange}
-                    value={password}
+                    onChange={handleChange}
+                    value={loginData.password}
                     id="loginPassword"
                     type={showPassword ? "text" : "password"}
                     className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -276,7 +261,7 @@ const Header = () => {
               </div>
               <div className="flex justify-between items-center mb-4">
                 <a onClick={toggleForgotPasswordPopup} className="text-sm text-blue-500 hover:text-blue-700 cursor-pointer">Quên mật khẩu?</a>
-                <button onClick={handleSubmitSignIn} type="submit" className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-yellow-300">Đăng nhập</button>
+                <button type="submit" className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-yellow-300">Đăng nhập</button>
               </div>
               <p className="text-center text-sm mb-4">Chưa có tài khoản? <a onClick={switchToRegister} className="text-blue-500 hover:text-blue-700 cursor-pointer">Đăng ký</a></p>
               <div className="flex justify-center space-x-4">
